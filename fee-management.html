@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Management - School ERP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="public/css/style.css" rel="stylesheet">
+    <script src="public/js/auth-check.js" defer></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><i class="fas fa-graduation-cap"></i> School ERP</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+                    <a class="nav-link" href="student-management.html"><i class="fas fa-user-graduate"></i> Students</a>
+                    <a class="nav-link" href="subject-management.html"><i class="fas fa-book"></i> Subjects</a>
+                    <a class="nav-link" href="class-management.html"><i class="fas fa-users"></i> Classes</a>
+                    <a class="nav-link" href="chapter-management.html"><i class="fas fa-file-alt"></i> Chapters</a>
+                    <a class="nav-link" href="current-status.html"><i class="fas fa-tasks"></i> Status</a>
+                    <a class="nav-link" href="teacher-management.html"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+                    <a class="nav-link" href="teacher-allotment.html"><i class="fas fa-tasks"></i> Allotment</a>
+                    <a class="nav-link" href="attendance.html"><i class="fas fa-calendar-check"></i> Attendance</a>
+                    <a class="nav-link active" href="fee-management.html"><i class="fas fa-rupee-sign"></i> Fees</a>
+                    <a class="nav-link" href="exam-results.html"><i class="fas fa-clipboard-list"></i> Exams</a>
+                    <a class="nav-link" href="timetable.html"><i class="fas fa-calendar-alt"></i> Timetable</a>
+                    <a class="nav-link" href="library.html"><i class="fas fa-book-reader"></i> Library</a>
+                    <a class="nav-link" href="transport.html"><i class="fas fa-bus"></i> Transport</a>
+                    <a class="nav-link" href="notice-board.html"><i class="fas fa-bullhorn"></i> Notices</a>
+                    <a class="nav-link" href="homework.html"><i class="fas fa-pencil-alt"></i> Homework</a>
+                    <button id="dark-mode-toggle" class="btn btn-outline-secondary ms-2">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-rupee-sign"></i> Fee Management</h1>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#feeModal">
+                <i class="fas fa-plus"></i> Create Fee
+            </button>
+        </div>
+
+        <!-- Fee Statistics -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h3 id="total-collected">₹0</h3>
+                        <p class="mb-0">Total Collected</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-danger text-white">
+                    <div class="card-body text-center">
+                        <h3 id="total-pending">₹0</h3>
+                        <p class="mb-0">Total Pending</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-warning text-dark">
+                    <div class="card-body text-center">
+                        <h3 id="pending-count">0</h3>
+                        <p class="mb-0">Pending Fees</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fee List -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-list"></i> Fee Records</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="fee-table">
+                        <thead>
+                            <tr>
+                                <th>Roll No.</th>
+                                <th>Student Name</th>
+                                <th>Class</th>
+                                <th>Fee Type</th>
+                                <th>Amount</th>
+                                <th>Paid</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fee-tbody">
+                            <tr><td colspan="9" class="text-center">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fee Modal -->
+    <div class="modal fade" id="feeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Fee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="fee-form">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Student</label>
+                            <select class="form-select" id="fee-student" required>
+                                <option value="">Select Student</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Fee Type</label>
+                            <select class="form-select" id="fee-type" required>
+                                <option value="Tuition Fee">Tuition Fee</option>
+                                <option value="Admission Fee">Admission Fee</option>
+                                <option value="Exam Fee">Exam Fee</option>
+                                <option value="Transport Fee">Transport Fee</option>
+                                <option value="Library Fee">Library Fee</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Amount</label>
+                            <input type="number" class="form-control" id="fee-amount" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Due Date</label>
+                            <input type="date" class="form-control" id="fee-due-date">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Fee</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Record Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="payment-form">
+                    <div class="modal-body">
+                        <input type="hidden" id="payment-fee-id">
+                        <div class="mb-3">
+                            <label class="form-label">Amount</label>
+                            <input type="number" class="form-control" id="payment-amount" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Payment Method</label>
+                            <select class="form-select" id="payment-method">
+                                <option value="cash">Cash</option>
+                                <option value="cheque">Cheque</option>
+                                <option value="online">Online</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Record Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="public/js/fee-management.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="public/js/dark-mode.js"></script>
+</body>
+</html>

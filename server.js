@@ -1,218 +1,95 @@
 const express = require('express');
-const { MongoClient } = require('mongodb');
 const cors = require('cors');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const crypto = require('crypto');
+const { connectDB } = require('./config/db');
+
+const classRoutes = require('./routes/classRoutes');
+const subjectRoutes = require('./routes/subjectRoutes');
+const chapterRoutes = require('./routes/chapterRoutes');
+const statusRoutes = require('./routes/statusRoutes');
+const teacherRoutes = require('./routes/teacherRoutes');
+const teacherAllotmentRoutes = require('./routes/teacherAllotmentRoutes');
+const userRoutes = require('./routes/userRoutes');
+const statsRoutes = require('./routes/statsRoutes');
+const authRoutes = require('./routes/authRoutes');
+
+// New ERP modules
+const studentRoutes = require('./routes/studentRoutes');
+const feeRoutes = require('./routes/feeRoutes');
+const attendanceRoutes = require('./routes/attendanceRoutes');
+const examRoutes = require('./routes/examRoutes');
+const timetableRoutes = require('./routes/timetableRoutes');
+const libraryRoutes = require('./routes/libraryRoutes');
+const noticeRoutes = require('./routes/noticeRoutes');
+const homeworkRoutes = require('./routes/homeworkRoutes');
+
+
 
 const app = express();
 const port = 3000;
 
-// MongoDB connection string - replace with your own
-const uri = 'mongodb://localhost:27017'; // Assuming local MongoDB
-const client = new MongoClient(uri);
-
-app.use(cors());
-app.use(express.json());
-app.use(express.static('.')); // Serve static files
-
-let db;
-
-async function connectDB() {
-    try {
-        await client.connect();
-        db = client.db('courseCompletionDB');
-        console.log('Connected to MongoDB');
-    } catch (error) {
-        console.error('MongoDB connection error:', error);
-    }
-}
-
+// Connect to Database
 connectDB();
 
-// Routes
+// Middleware
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
+app.use(express.json());
 
-// Classes
-app.get('/api/classes', async (req, res) => {
-    try {
-        const classes = await db.collection('classes').find({}).toArray();
-        res.json(classes.map(c => c.name));
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+// Session configuration
+// Use environment variable or generate random secret for development
+const sessionSecret = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
+
+app.use(session({
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: 'mongodb://localhost:27017/courseCompletionDB',
+        touchAfter: 24 * 3600 // lazy session update
+    }),
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+        httpOnly: true,
+        secure: false // set to true in production with HTTPS
     }
-});
+}));
 
-app.post('/api/classes', async (req, res) => {
-    try {
-        const { name } = req.body;
-        await db.collection('classes').insertOne({ name });
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+// Serve static files
+app.use(express.static('public'));
+app.use(express.static('.')); // Serve root HTML files
 
-app.put('/api/classes/:oldName', async (req, res) => {
-    try {
-        const { oldName } = req.params;
-        const { name } = req.body;
-        await db.collection('classes').updateOne({ name: oldName }, { $set: { name } });
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+// Public routes (no authentication required)
+app.use('/api/auth', authRoutes);
+app.use('/api', userRoutes); // Registration is public
 
-app.delete('/api/classes/:name', async (req, res) => {
-    try {
-        const { name } = req.params;
-        await db.collection('classes').deleteOne({ name });
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+// Protected routes (authentication and authorization handled in route files)
+app.use('/api/classes', classRoutes);
+app.use('/api/subjects', subjectRoutes);
+app.use('/api/chapters', chapterRoutes);
+app.use('/api/status', statusRoutes);
+app.use('/api/teachers', teacherRoutes);
+app.use('/api/teacher-allotments', teacherAllotmentRoutes);
+app.use('/api/stats', statsRoutes);
 
-// Subjects
-app.get('/api/subjects', async (req, res) => {
-    try {
-        const subjects = await db.collection('subjects').find({}).toArray();
-        res.json(subjects.map(s => s.name));
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+// New ERP module routes
+app.use('/api/students', studentRoutes);
+app.use('/api/fees', feeRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/exams', examRoutes);
+app.use('/api/timetable', timetableRoutes);
+app.use('/api/library', libraryRoutes);
+app.use('/api/notices', noticeRoutes);
+app.use('/api/homework', homeworkRoutes);
 
-app.post('/api/subjects', async (req, res) => {
-    try {
-        const { name } = req.body;
-        await db.collection('subjects').insertOne({ name });
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}`);
+    });
+}
 
-app.put('/api/subjects/:oldName', async (req, res) => {
-    try {
-        const { oldName } = req.params;
-        const { name } = req.body;
-        await db.collection('subjects').updateOne({ name: oldName }, { $set: { name } });
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.delete('/api/subjects/:name', async (req, res) => {
-    try {
-        const { name } = req.params;
-        await db.collection('subjects').deleteOne({ name });
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Chapters
-app.get('/api/chapters/:className/:subjectName', async (req, res) => {
-    try {
-        const { className, subjectName } = req.params;
-        const chapters = await db.collection('chapters').find({ className, subjectName }).sort({ chapterNumber: 1 }).toArray();
-        res.json(chapters);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.post('/api/chapters', async (req, res) => {
-    try {
-        const chapter = req.body;
-        await db.collection('chapters').insertOne(chapter);
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.put('/api/chapters/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const chapter = req.body;
-        await db.collection('chapters').updateOne({ _id: new require('mongodb').ObjectId(id) }, { $set: chapter });
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.delete('/api/chapters/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        await db.collection('chapters').deleteOne({ _id: new require('mongodb').ObjectId(id) });
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Status
-app.get('/api/status/:className/:subjectName', async (req, res) => {
-    try {
-        const { className, subjectName } = req.params;
-        const status = await db.collection('status').find({ className, subjectName }).toArray();
-        const statusMap = {};
-        status.forEach(s => {
-            statusMap[s.chapterNumber] = s;
-        });
-        res.json(statusMap);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.put('/api/status/:className/:subjectName/:chapterNumber', async (req, res) => {
-    try {
-        const { className, subjectName, chapterNumber } = req.params;
-        const statusData = req.body;
-        await db.collection('status').updateOne(
-            { className, subjectName, chapterNumber: parseInt(chapterNumber) },
-            { $set: { ...statusData, className, subjectName, chapterNumber: parseInt(chapterNumber) } },
-            { upsert: true }
-        );
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.delete('/api/status/:className/:subjectName/:chapterNumber', async (req, res) => {
-    try {
-        const { className, subjectName, chapterNumber } = req.params;
-        await db.collection('status').deleteOne({ className, subjectName, chapterNumber: parseInt(chapterNumber) });
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// All chapters
-app.get('/api/all-chapters', async (req, res) => {
-    try {
-        const chapters = await db.collection('chapters').find({}).toArray();
-        res.json(chapters);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// All status
-app.get('/api/all-status', async (req, res) => {
-    try {
-        const status = await db.collection('status').find({}).toArray();
-        res.json(status);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+module.exports = app;

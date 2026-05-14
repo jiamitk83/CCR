@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chapter Management - CCR</title>
+    <title>Teacher Allotment - CCR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="public/css/style.css" rel="stylesheet">
@@ -21,9 +21,10 @@
                     <a class="nav-link" href="index.html"><i class="fas fa-home"></i> Dashboard</a>
                     <a class="nav-link" href="subject-management.html"><i class="fas fa-book"></i> Subjects</a>
                     <a class="nav-link" href="class-management.html"><i class="fas fa-users"></i> Classes</a>
-                    <a class="nav-link active" href="chapter-management.html"><i class="fas fa-file-alt"></i> Chapters</a>
+                    <a class="nav-link" href="chapter-management.html"><i class="fas fa-file-alt"></i> Chapters</a>
                     <a class="nav-link" href="current-status.html"><i class="fas fa-tasks"></i> Status</a>
                     <a class="nav-link" href="teacher-management.html"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+                    <a class="nav-link active" href="teacher-allotment.html"><i class="fas fa-tasks"></i> Allotment</a>
                     <a class="nav-link" href="register.html"><i class="fas fa-user-plus"></i> Register</a>
                     <button id="dark-mode-toggle" class="btn btn-outline-secondary ms-2">
                         <i class="fas fa-moon"></i>
@@ -34,90 +35,65 @@
     </nav>
 
     <div class="container">
-        <h1 class="text-center">Chapter Management</h1>
+        <h1 class="text-center">Teacher Allotment</h1>
+        <p class="text-center text-muted">Assign teachers to classes and subjects</p>
 
-        <!-- Filters Card -->
+        <!-- Allot Teacher Card -->
         <div class="card">
             <div class="card-header">
-                <h5><i class="fas fa-filter"></i> Filter & Select</h5>
+                <h5><i class="fas fa-plus-circle"></i> Allot Teacher</h5>
             </div>
             <div class="card-body">
-                <div class="row g-4">
-                    <div class="col-md-6">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
                         <label for="class-select" class="form-label">Class</label>
                         <select class="form-select" id="class-select">
                             <option value="">Select Class</option>
                         </select>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="subject-select" class="form-label">Subject</label>
                         <select class="form-select" id="subject-select" disabled>
                             <option value="">Select Subject</option>
                         </select>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Chapter Card -->
-        <div class="card" id="add-chapter-div" style="display: none;">
-            <div class="card-header">
-                <h5><i class="fas fa-plus-circle"></i> Add New Chapter</h5>
-            </div>
-            <div class="card-body">
-                <div class="row g-3">
                     <div class="col-md-3">
-                        <label for="chapter-number" class="form-label">Chapter Number</label>
-                        <input type="number" class="form-control" id="chapter-number" placeholder="e.g., 1">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="chapter-name" class="form-label">Chapter Name</label>
-                        <input type="text" class="form-control" id="chapter-name" placeholder="Enter chapter name">
-                    </div>
-                    <div class="col-md-2">
-                        <label for="start-month" class="form-label">Start Month</label>
-                        <select class="form-select" id="start-month">
-                            <option value="">Select Month</option>
+                        <label for="teacher-select" class="form-label">Teacher</label>
+                        <select class="form-select" id="teacher-select">
+                            <option value="">Select Teacher</option>
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <label for="end-month" class="form-label">End Month</label>
-                        <select class="form-select" id="end-month">
-                            <option value="">Select Month</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button class="btn btn-success w-100" id="add-btn"><i class="fas fa-plus"></i> Add</button>
+                    <div class="col-md-3">
+                        <button class="btn btn-success w-100" id="allot-btn"><i class="fas fa-plus"></i> Allot</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Chapters Table Card -->
-        <div class="card" id="chapter-table" style="display: none;">
+        <!-- Allotments List Card -->
+        <div class="card">
             <div class="card-header">
-                <h5><i class="fas fa-list"></i> Chapters List</h5>
+                <h5><i class="fas fa-list-ul"></i> Allotted Teachers</h5>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover" id="allotment-table">
                         <thead>
                             <tr>
-                                <th>Chapter No.</th>
-                                <th>Chapter Name</th>
-                                <th>Start Month</th>
-                                <th>End Month</th>
-                                <th style="width: 200px;">Actions</th>
+                                <th>Class</th>
+                                <th>Subject</th>
+                                <th>Teacher</th>
+                                <th style="width: 150px;">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="chapter-list"></tbody>
+                        <tbody id="allotment-tbody"></tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="public/js/chapter-management.js"></script>
+    <script src="public/js/teacher-allotment.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="public/js/dark-mode.js"></script>
 </body>

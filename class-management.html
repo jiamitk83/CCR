@@ -3,82 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class Management - Course Completion Report</title>
+    <title>Class Management - CCR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            min-height: 100vh;
-        }
-        h1 {
-            text-align: center;
-        }
-        nav {
-            background-color: #f2f2f2;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-        nav a {
-            margin-right: 20px;
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-        }
-        nav a:hover {
-            color: #007bff;
-        }
-        #add-class {
-            margin-bottom: 20px;
-        }
-        #class-name {
-            padding: 8px;
-            width: 70%;
-            margin-right: 10px;
-        }
-        button {
-            padding: 8px 16px;
-            cursor: pointer;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            background: #f4f4f4;
-            margin-bottom: 10px;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .edit-input {
-            flex-grow: 1;
-            margin-right: 10px;
-        }
-    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="public/css/style.css" rel="stylesheet">
+    <script src="public/js/auth-check.js" defer></script>
 </head>
-<body class="bg-light">
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-            <div class="container">
-                <div class="navbar-nav">
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap"></i> CCR</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
                     <a class="nav-link" href="index.html"><i class="fas fa-home"></i> Dashboard</a>
-                    <a class="nav-link" href="subject-management.html"><i class="fas fa-book"></i> Subject Management</a>
-                    <a class="nav-link active" href="class-management.html"><i class="fas fa-users"></i> Class Management</a>
-                    <a class="nav-link" href="chapter-management.html"><i class="fas fa-file-alt"></i> Chapter Management</a>
-                    <a class="nav-link" href="current-status.html"><i class="fas fa-tasks"></i> Current Status</a>
+                    <a class="nav-link" href="subject-management.html"><i class="fas fa-book"></i> Subjects</a>
+                    <a class="nav-link active" href="class-management.html"><i class="fas fa-users"></i> Classes</a>
+                    <a class="nav-link" href="chapter-management.html"><i class="fas fa-file-alt"></i> Chapters</a>
+                    <a class="nav-link" href="current-status.html"><i class="fas fa-tasks"></i> Status</a>
+                    <a class="nav-link" href="teacher-management.html"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+                    <a class="nav-link" href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+                    <button id="dark-mode-toggle" class="btn btn-outline-secondary ms-2">
+                        <i class="fas fa-moon"></i>
+                    </button>
                 </div>
             </div>
-        </nav>
-        <h1 class="text-center mb-4"><i class="fas fa-users"></i> Class Management</h1>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="text-center">Class Management</h1>
         <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Add New Class</h5>
+            </div>
             <div class="card-body">
-                <div class="input-group mb-3">
+                <div class="mb-3">
+                    <label for="class-name" class="form-label">Class Name</label>
                     <input type="text" class="form-control" id="class-name" placeholder="Enter class name">
-                    <button class="btn btn-primary" id="add-btn"><i class="fas fa-plus"></i> Add Class</button>
                 </div>
+                <button class="btn btn-primary" id="add-btn"><i class="fas fa-plus"></i> Add Class</button>
             </div>
         </div>
         <div class="card">
@@ -91,106 +57,7 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        const classList = document.getElementById('class-list');
-        const classNameInput = document.getElementById('class-name');
-        const addBtn = document.getElementById('add-btn');
-
-        let classes = [];
-
-        async function loadClasses() {
-            try {
-                const response = await fetch('/api/classes');
-                classes = await response.json();
-                renderClasses();
-            } catch (error) {
-                console.error('Error loading classes:', error);
-            }
-        }
-
-        function renderClasses() {
-            classList.innerHTML = '';
-            classes.forEach((classItem, index) => {
-                const li = document.createElement('li');
-                li.className = 'list-group-item d-flex justify-content-between align-items-center';
-                li.innerHTML = `
-                    <span>${classItem}</span>
-                    <div>
-                        <button class="btn btn-sm btn-outline-primary me-2 edit-btn" data-index="${index}"><i class="fas fa-edit"></i> Edit</button>
-                        <button class="btn btn-sm btn-outline-danger delete-btn" data-index="${index}"><i class="fas fa-trash"></i> Delete</button>
-                    </div>
-                `;
-                classList.appendChild(li);
-            });
-        }
-
-        // Add class
-        addBtn.addEventListener('click', async () => {
-            const name = classNameInput.value.trim();
-            if (name) {
-                try {
-                    await fetch('/api/classes', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name })
-                    });
-                    classNameInput.value = '';
-                    loadClasses();
-                } catch (error) {
-                    console.error('Error adding class:', error);
-                }
-            }
-        });
-
-        // Edit and Delete
-        classList.addEventListener('click', async (e) => {
-            const index = e.target.dataset.index;
-            const className = classes[index];
-            if (e.target.classList.contains('edit-btn')) {
-                const li = e.target.closest('li');
-                const span = li.querySelector('span');
-                const currentName = span.textContent;
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.value = currentName;
-                input.className = 'form-control edit-input';
-                li.replaceChild(input, span);
-                e.target.innerHTML = '<i class="fas fa-save"></i> Save';
-                e.target.classList.remove('edit-btn');
-                e.target.classList.add('save-btn');
-                e.target.classList.remove('btn-outline-primary');
-                e.target.classList.add('btn-success');
-            } else if (e.target.classList.contains('save-btn')) {
-                const li = e.target.closest('li');
-                const input = li.querySelector('.edit-input');
-                const newName = input.value.trim();
-                if (newName) {
-                    try {
-                        await fetch(`/api/classes/${className}`, {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ name: newName })
-                        });
-                        loadClasses();
-                    } catch (error) {
-                        console.error('Error updating class:', error);
-                    }
-                }
-            } else if (e.target.classList.contains('delete-btn')) {
-                try {
-                    await fetch(`/api/classes/${className}`, {
-                        method: 'DELETE'
-                    });
-                    loadClasses();
-                } catch (error) {
-                    console.error('Error deleting class:', error);
-                }
-            }
-        });
-
-        // Initial load
-        loadClasses();
-    </script>
+    <script src="public/js/class-management.js"></script>
+    <script src="public/js/dark-mode.js"></script>
 </body>
 </html>

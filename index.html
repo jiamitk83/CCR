@@ -3,207 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Course Completion Report</title>
+    <title>Dashboard - School ERP</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            min-height: 100vh;
-        }
-        h1 {
-            text-align: center;
-        }
-        nav {
-            background-color: #f2f2f2;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-        nav a {
-            margin-right: 20px;
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-        }
-        nav a:hover {
-            color: #007bff;
-        }
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
-        .stat {
-            background: #e9ecef;
-            padding: 20px;
-            border-radius: 5px;
-            text-align: center;
-            flex: 1;
-            margin: 0 10px;
-        }
-        .stat h3 {
-            margin: 0;
-            font-size: 2em;
-        }
-        .stat p {
-            margin: 5px 0 0 0;
-        }
-        .report {
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="public/css/style.css" rel="stylesheet">
+    <script src="public/js/auth-check.js" defer></script>
 </head>
-<body class="bg-light">
-    <div class="container-fluid">
-        <h1 class="text-center my-4"><i class="fas fa-chart-line"></i> Course Completion Report Dashboard</h1>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
-            <div class="navbar-nav">
-                <a class="nav-link active" href="index.html"><i class="fas fa-home"></i> Dashboard</a>
-                <a class="nav-link" href="subject-management.html"><i class="fas fa-book"></i> Subject Management</a>
-                <a class="nav-link" href="class-management.html"><i class="fas fa-users"></i> Class Management</a>
-                <a class="nav-link" href="chapter-management.html"><i class="fas fa-file-alt"></i> Chapter Management</a>
-                <a class="nav-link" href="current-status.html"><i class="fas fa-tasks"></i> Current Status</a>
+            <a class="navbar-brand" href="index.html"><i class="fas fa-graduation-cap"></i> School ERP</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link active" href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+                    <a class="nav-link" href="student-management.html"><i class="fas fa-user-graduate"></i> Students</a>
+                    <a class="nav-link" href="subject-management.html"><i class="fas fa-book"></i> Subjects</a>
+                    <a class="nav-link" href="class-management.html"><i class="fas fa-users"></i> Classes</a>
+                    <a class="nav-link" href="chapter-management.html"><i class="fas fa-file-alt"></i> Chapters</a>
+                    <a class="nav-link" href="current-status.html"><i class="fas fa-tasks"></i> Status</a>
+                    <a class="nav-link" href="teacher-management.html"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+                    <a class="nav-link" href="teacher-allotment.html"><i class="fas fa-tasks"></i> Allotment</a>
+                    <a class="nav-link" href="attendance.html"><i class="fas fa-calendar-check"></i> Attendance</a>
+                    <a class="nav-link" href="fee-management.html"><i class="fas fa-rupee-sign"></i> Fees</a>
+                    <a class="nav-link" href="exam-results.html"><i class="fas fa-clipboard-list"></i> Exams</a>
+                    <a class="nav-link" href="timetable.html"><i class="fas fa-calendar-alt"></i> Timetable</a>
+                    <a class="nav-link" href="library.html"><i class="fas fa-book-reader"></i> Library</a>
+                    <a class="nav-link" href="transport.html"><i class="fas fa-bus"></i> Transport</a>
+                    <a class="nav-link" href="notice-board.html"><i class="fas fa-bullhorn"></i> Notices</a>
+                    <a class="nav-link" href="homework.html"><i class="fas fa-pencil-alt"></i> Homework</a>
+                    <a class="nav-link" href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+                    <button id="dark-mode-toggle" class="btn btn-outline-secondary ms-2">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-users"></i> Total Classes</h5>
-                    <h2 id="total-classes">0</h2>
+    <div class="container">
+        <h1 class="text-center mb-4"><i class="fas fa-chart-line"></i> Dashboard</h1>
+
+        <!-- Statistics Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="card stats-card bg-gradient-primary">
+                    <div class="card-body">
+                        <i class="fas fa-users"></i>
+                        <h5>Total Students</h5>
+                        <h2 id="total-students">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card bg-gradient-success">
+                    <div class="card-body">
+                        <i class="fas fa-user-graduate"></i>
+                        <h5>Total Classes</h5>
+                        <h2 id="total-classes">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card bg-gradient-warning">
+                    <div class="card-body">
+                        <i class="fas fa-book"></i>
+                        <h5>Total Subjects</h5>
+                        <h2 id="total-subjects">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card bg-gradient-danger">
+                    <div class="card-body">
+                        <i class="fas fa-percentage"></i>
+                        <h5>Completion Rate</h5>
+                        <h2 id="completion-rate">0%</h2>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-info mb-3">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-book"></i> Total Subjects</h5>
-                    <h2 id="total-subjects">0</h2>
+
+        <!-- Additional Stats Row -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="card stats-card bg-gradient-info">
+                    <div class="card-body">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <h5>Teachers</h5>
+                        <h2 id="total-teachers">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card bg-gradient-dark">
+                    <div class="card-body">
+                        <i class="fas fa-calendar-check"></i>
+                        <h5>Today's Attendance</h5>
+                        <h2 id="today-attendance">0%</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="card-body">
+                        <i class="fas fa-rupee-sign"></i>
+                        <h5>Fee Collection</h5>
+                        <h2 id="fee-collection">₹0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="card-body">
+                        <i class="fas fa-bullhorn"></i>
+                        <h5>Active Notices</h5>
+                        <h2 id="active-notices">0</h2>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-warning mb-3">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-file-alt"></i> Total Chapters</h5>
-                    <h2 id="total-chapters">0</h2>
+
+        <!-- Quick Actions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <a href="student-management.html" class="btn btn-primary w-100">
+                            <i class="fas fa-user-plus d-block mb-2"></i> Add Student
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="attendance.html" class="btn btn-success w-100">
+                            <i class="fas fa-calendar-check d-block mb-2"></i> Mark Attendance
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="exam-results.html" class="btn btn-warning w-100">
+                            <i class="fas fa-clipboard-list d-block mb-2"></i> Add Exam
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="fee-management.html" class="btn btn-info w-100">
+                            <i class="fas fa-rupee-sign d-block mb-2"></i> Collect Fee
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="notice-board.html" class="btn btn-secondary w-100">
+                            <i class="fas fa-bullhorn d-block mb-2"></i> Post Notice
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="homework.html" class="btn btn-danger w-100">
+                            <i class="fas fa-pencil-alt d-block mb-2"></i> Assign Homework
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-danger mb-3">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-percentage"></i> Completion Rate</h5>
-                    <h2 id="completion-rate">0%</h2>
+
+        <!-- Course Completion Overview -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-table"></i> Course Completion Overview</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="report-table">
+                        <thead>
+                            <tr>
+                                <th>Class</th>
+                                <th>Subject</th>
+                                <th>Total Chapters</th>
+                                <th>Completed</th>
+                                <th>Completion %</th>
+                            </tr>
+                        </thead>
+                        <tbody id="report-tbody"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            <h2 class="mb-0"><i class="fas fa-table"></i> Status Report</h2>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover" id="report-table">
-                    <thead class="table-dark">
-                        <tr>
-                            <th><i class="fas fa-users"></i> Class</th>
-                            <th><i class="fas fa-book"></i> Subject</th>
-                            <th><i class="fas fa-file-alt"></i> Total Chapters</th>
-                            <th><i class="fas fa-check"></i> Completed Chapters</th>
-                            <th><i class="fas fa-percentage"></i> Completion %</th>
-                        </tr>
-                    </thead>
-                    <tbody id="report-tbody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        async function calculateStats() {
-            try {
-                const [classesResponse, subjectsResponse, allChaptersResponse, allStatusResponse] = await Promise.all([
-                    fetch('/api/classes'),
-                    fetch('/api/subjects'),
-                    fetch('/api/all-chapters'),
-                    fetch('/api/all-status')
-                ]);
-                const classes = await classesResponse.json();
-                const subjects = await subjectsResponse.json();
-                const allChapters = await allChaptersResponse.json();
-                const allStatus = await allStatusResponse.json();
-
-                document.getElementById('total-classes').textContent = classes.length;
-                document.getElementById('total-subjects').textContent = subjects.length;
-                document.getElementById('total-chapters').textContent = allChapters.length;
-
-                let totalCompleted = 0;
-                const statusMap = {};
-                allStatus.forEach(s => {
-                    const key = `${s.className}-${s.subjectName}-${s.chapterNumber}`;
-                    statusMap[key] = s;
-                    if (s.chapterCompleted) totalCompleted++;
-                });
-
-                const overallRate = allChapters.length > 0 ? Math.round((totalCompleted / allChapters.length) * 100) : 0;
-                document.getElementById('completion-rate').textContent = overallRate + '%';
-
-                const tbody = document.getElementById('report-tbody');
-                tbody.innerHTML = '';
-
-                const grouped = {};
-                allChapters.forEach(chap => {
-                    const key = `${chap.className}-${chap.subjectName}`;
-                    if (!grouped[key]) grouped[key] = { className: chap.className, subjectName: chap.subjectName, chapters: [] };
-                    grouped[key].chapters.push(chap);
-                });
-
-                Object.values(grouped).forEach(group => {
-                    const chapList = group.chapters;
-                    let completed = 0;
-                    chapList.forEach(chap => {
-                        const key = `${group.className}-${group.subjectName}-${chap.chapterNumber}`;
-                        if (statusMap[key] && statusMap[key].chapterCompleted) completed++;
-                    });
-                    const percentage = chapList.length > 0 ? Math.round((completed / chapList.length) * 100) : 0;
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${group.className}</td>
-                        <td>${group.subjectName}</td>
-                        <td>${chapList.length}</td>
-                        <td>${completed}</td>
-                        <td>${percentage}%</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error('Error loading stats:', error);
-            }
-        }
-
-        // Initialize
-        calculateStats();
-    </script>
+    <script src="public/js/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </div>
+    <script src="public/js/dark-mode.js"></script>
 </body>
 </html>

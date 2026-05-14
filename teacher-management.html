@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subject Management - CCR</title>
+    <title>Teacher Management - CCR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="public/css/style.css" rel="stylesheet">
@@ -19,11 +19,12 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <div class="navbar-nav ms-auto">
                     <a class="nav-link" href="index.html"><i class="fas fa-home"></i> Dashboard</a>
-                    <a class="nav-link active" href="subject-management.html"><i class="fas fa-book"></i> Subjects</a>
+                    <a class="nav-link" href="subject-management.html"><i class="fas fa-book"></i> Subjects</a>
                     <a class="nav-link" href="class-management.html"><i class="fas fa-users"></i> Classes</a>
                     <a class="nav-link" href="chapter-management.html"><i class="fas fa-file-alt"></i> Chapters</a>
                     <a class="nav-link" href="current-status.html"><i class="fas fa-tasks"></i> Status</a>
-                    <a class="nav-link" href="teacher-management.html"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+                    <a class="nav-link active" href="teacher-management.html"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+                    <a class="nav-link" href="teacher-allotment.html"><i class="fas fa-tasks"></i> Allotment</a>
                     <a class="nav-link" href="register.html"><i class="fas fa-user-plus"></i> Register</a>
                     <button id="dark-mode-toggle" class="btn btn-outline-secondary ms-2">
                         <i class="fas fa-moon"></i>
@@ -34,30 +35,49 @@
     </nav>
 
     <div class="container">
-        <h1 class="text-center">Subject Management</h1>
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Add New Subject</h5>
-                <button class="btn btn-secondary" id="load-data-btn"><i class="fas fa-upload"></i> Load Data</button>
+        <h1 class="text-center">Teachers Management</h1>
+
+        <!-- Add Teacher Card -->
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-plus-circle"></i> Add New Teacher</h5>
             </div>
             <div class="card-body">
-                <div class="input-group">
-                    <input type="text" class="form-control" id="subject-name" placeholder="Enter subject name">
-                    <button class="btn btn-primary" id="add-btn"><i class="fas fa-plus"></i> Add Subject</button>
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-8">
+                        <label for="teacher-name" class="form-label">Teacher Name</label>
+                        <input type="text" class="form-control" id="teacher-name" placeholder="Enter teacher name">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-success w-100" id="add-btn"><i class="fas fa-plus"></i> Add Teacher</button>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Teachers List Card -->
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-list"></i> Subjects</h5>
+                <h5><i class="fas fa-list-ul"></i> Teachers List</h5>
             </div>
-            <div class="card-body">
-                <ul class="list-group" id="subject-list"></ul>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="teacher-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th style="width: 200px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teacher-tbody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+
+    <script src="public/js/teacher-management.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="public/js/subject-management.js"></script>
     <script src="public/js/dark-mode.js"></script>
 </body>
 </html>
